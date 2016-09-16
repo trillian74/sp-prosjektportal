@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
   <Module Name="SitePages" Url="SitePages" List="119">
-    <File Path="SitePages\Forside.aspx" Url="Forside.aspx" Type="GhostableInLibrary" >
+    <File Path="SitePages\Forside.aspx" Url="Forside.aspx" Type="GhostableInLibrary">
       <Property Name="ContentType" Value="Prosjektforside" />
       <Property Name="ContentTypeId" Value="0x010109010058561f86d956412b9dd7957bbcd67aae01" />
-      <View List="Lists/Oppgaver" BaseViewID="1" WebPartZoneID="LeftColumn" WebPartOrder="0" >
+      <View List="Lists/Oppgaver" BaseViewID="1" WebPartZoneID="LeftColumn" WebPartOrder="0">
         <![CDATA[
          <WebPart xmlns="http://schemas.microsoft.com/WebPart/v2">
           <Assembly>Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c</Assembly>
@@ -13,7 +13,7 @@
          </WebPart>
          ]]>
       </View>
-      <View List="Dokumenter" BaseViewID="1" WebPartZoneID="LeftColumn" WebPartOrder="1" >
+      <View List="Dokumenter" BaseViewID="1" WebPartZoneID="LeftColumn" WebPartOrder="1">
         <![CDATA[
          <WebPart xmlns="http://schemas.microsoft.com/WebPart/v2">
           <Assembly>Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c</Assembly>
@@ -22,7 +22,7 @@
          </WebPart>
          ]]>
       </View>
-      <AllUsersWebPart ID="Sitefeed" WebPartZoneID="RightColumn" WebPartOrder="0" >
+      <AllUsersWebPart ID="Sitefeed" WebPartZoneID="RightColumn" WebPartOrder="0">
         <![CDATA[
           <?xml version="1.0" encoding="utf-8"?>
           <WebPart xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/WebPart/v2">
@@ -55,7 +55,7 @@
           </WebPart>
         ]]>
       </AllUsersWebPart>
-      <View List="Lists/Usikkerhet" BaseViewID="1" WebPartZoneID="RightColumn" WebPartOrder="1" >
+      <View List="Lists/Usikkerhet" BaseViewID="1" WebPartZoneID="RightColumn" WebPartOrder="1">
         <![CDATA[
          <WebPart xmlns="http://schemas.microsoft.com/WebPart/v2">
           <Assembly>Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c</Assembly>
@@ -63,15 +63,15 @@
           <Title>Usikkerhet (gjeldende fase)</Title>
          </WebPart>
          ]]>
-      </View>        
+      </View>
     </File>
-    <File Path="SitePages\Ufiltrert.aspx" Url="Ufiltrert.aspx" Type="GhostableInLibrary" >
+    <File Path="SitePages\Ufiltrert.aspx" Url="Ufiltrert.aspx" Type="GhostableInLibrary">
       <Property Name="Title" Value="Ufiltrert prosjektvisning" />
       <Property Name="ContentType" Value="WebPartPage" />
       <Property Name="ContentTypeId" Value="0x01010901" />
       <View List="Lists/Oppgaver" BaseViewID="1" WebPartZoneID="LeftColumn" WebPartOrder="0" />
       <View List="Dokumenter" BaseViewID="1" WebPartZoneID="LeftColumn" WebPartOrder="1" />
-      <AllUsersWebPart ID="Sitefeed" WebPartZoneID="RightColumn" WebPartOrder="0" >
+      <AllUsersWebPart ID="Sitefeed" WebPartZoneID="RightColumn" WebPartOrder="0">
         <![CDATA[
           <?xml version="1.0" encoding="utf-8"?>
           <WebPart xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/WebPart/v2">
@@ -106,11 +106,11 @@
       </AllUsersWebPart>
       <View List="Lists/Usikkerhet" BaseViewID="1" WebPartZoneID="RightColumn" WebPartOrder="1" />
     </File>
-    <File Path="SitePages\Motereferat.aspx" Url="Motereferat.aspx" Type="GhostableInLibrary" >
+    <File Path="SitePages\Motereferat.aspx" Url="Motereferat.aspx" Type="GhostableInLibrary">
       <Property Name="Title" Value="Møtereferat" />
       <Property Name="ContentType" Value="WebPartPage" />
       <Property Name="ContentTypeId" Value="0x01010901" />
-      <View List="Lists/Oppgaver" BaseViewID="1" WebPartZoneID="Left" WebPartOrder="0" >
+      <View List="Lists/Oppgaver" BaseViewID="1" WebPartZoneID="Left" WebPartOrder="0">
         <![CDATA[
          <WebPart xmlns="http://schemas.microsoft.com/WebPart/v2">
           <Assembly>Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c</Assembly>
@@ -120,7 +120,7 @@
          </WebPart>
          ]]>
       </View>
-      <View List="Lists/Informasjon" BaseViewID="1" WebPartZoneID="Right" WebPartOrder="0" >
+      <View List="Lists/Informasjon" BaseViewID="1" WebPartZoneID="Right" WebPartOrder="0">
         <![CDATA[
          <WebPart xmlns="http://schemas.microsoft.com/WebPart/v2">
           <Assembly>Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c</Assembly>
@@ -128,13 +128,13 @@
           <Title>Siste informasjonselementer</Title>
          </WebPart>
          ]]>
-      </View>        
+      </View>
     </File>
-    <File Path="SitePages\Tilordnet.aspx" Url="Tilordnet.aspx" Type="GhostableInLibrary" >
+    <File Path="SitePages\Tilordnet.aspx" Url="Tilordnet.aspx" Type="GhostableInLibrary">
       <Property Name="Title" Value="Mine prosjektelementer" />
       <Property Name="ContentType" Value="WebPartPage" />
       <Property Name="ContentTypeId" Value="0x01010901" />
-      <View List="Lists/Oppgaver" BaseViewID="1" WebPartZoneID="LeftColumn" WebPartOrder="0" >
+      <View List="Lists/Oppgaver" BaseViewID="1" WebPartZoneID="LeftColumn" WebPartOrder="0">
         <![CDATA[
           <webParts>
             <webPart xmlns="http://schemas.microsoft.com/WebPart/v3">
@@ -152,7 +152,16 @@
           </webParts>
          ]]>
       </View>
-      <View List="Lists/Kommunikasjonsplan" BaseViewID="1" WebPartZoneID="RightColumn" WebPartOrder="0" >
+      <View List="Lists/Usikkerhet" BaseViewID="1" WebPartZoneID="LeftColumn" WebPartOrder="1">
+        <![CDATA[
+         <WebPart xmlns="http://schemas.microsoft.com/WebPart/v2">
+          <Assembly>Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c</Assembly>
+          <TypeName>Microsoft.SharePoint.WebPartPages.XsltListViewWebPart</TypeName>
+          <Title>Risiko jeg har ansvar for</Title>
+         </WebPart>
+         ]]>
+      </View>
+      <View List="Lists/Kommunikasjonsplan" BaseViewID="1" WebPartZoneID="RightColumn" WebPartOrder="0">
         <![CDATA[
          <WebPart xmlns="http://schemas.microsoft.com/WebPart/v2">
           <Assembly>Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c</Assembly>
@@ -161,7 +170,7 @@
          </WebPart>
          ]]>
       </View>
-      <View List="Lists/Produkter" BaseViewID="1" WebPartZoneID="RightColumn" WebPartOrder="1" >
+      <View List="Lists/Produkter" BaseViewID="1" WebPartZoneID="RightColumn" WebPartOrder="1">
         <![CDATA[
          <WebPart xmlns="http://schemas.microsoft.com/WebPart/v2">
           <Assembly>Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c</Assembly>

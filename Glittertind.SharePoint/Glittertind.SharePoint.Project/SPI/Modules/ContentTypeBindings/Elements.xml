@@ -1,7 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
-  <ContentTypeBinding ListUrl="SitePages" ContentTypeId="0x010109010058561f86d956412b9dd7957bbcd67aae01"/>
+  <ContentTypeBinding ListUrl="SitePages" ContentTypeId="0x010109010058561f86d956412b9dd7957bbcd67aae01" />
   <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c01" />
+  <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c0105" />
+  <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c0106" />
+  <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c0107" />
+  <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c0108" />
+  <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c0109" />
+  <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c0110" />
+  <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c0111" />
+  <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c0112" />
   <ContentTypeBinding ListUrl="Lists/Usikkerhet" ContentTypeId="0x010088578e7470cc4aa68d566346483107020101" />
   <ContentTypeBinding ListUrl="Lists/Usikkerhet" ContentTypeId="0x010088578e7470cc4aa68d566346483107020102" />
   <ContentTypeBinding ListUrl="Lists/Interessentregister" ContentTypeId="0x010088578e7470cc4aa68d5663464831070202" />

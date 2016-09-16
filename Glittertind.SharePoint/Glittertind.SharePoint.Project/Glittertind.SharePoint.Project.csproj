@@ -52,6 +52,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Features\Feature1\Feature1.feature">
+      <FeatureId>{f01425dd-7fc8-4f1a-932a-9e4fdece64c3}</FeatureId>
+    </None>
     <None Include="Features\WebProjectLists\WebProjectLists.feature">
       <FeatureId>{5c79da09-b006-4c05-a3ea-ea0900b13482}</FeatureId>
     </None>
@@ -128,6 +131,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Features\Feature1\Feature1.Template.xml">
+      <DependentUpon>Feature1.feature</DependentUpon>
+    </Content>
     <Content Include="Features\WebProjectLists\WebProjectLists.Template.xml">
       <DependentUpon>WebProjectLists.feature</DependentUpon>
     </Content>
@@ -161,11 +167,15 @@
     <Content Include="SPI\Modules\MeetingCalendarFormWebparts\FormPlaceholder.aspx" />
     <Content Include="SPI\Modules\ProjectLogFormWebparts\FormPlaceholder.aspx" />
     <Content Include="SPI\Modules\ProjectLogFormWebparts\Elements.xml" />
-    <Content Include="SPI\Modules\SitePages\Elements.xml" />
+    <Content Include="SPI\Modules\SitePages\Elements.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="SPI\Modules\SitePages\Tilordnet.aspx" />
     <Content Include="SPI\Modules\SitePages\Ufiltrert.aspx" />
     <Content Include="SPI\Modules\SitePages\Forside.aspx" />
-    <Content Include="SPI\Modules\SitePagesFormWebparts\Elements.xml" />
+    <Content Include="SPI\Modules\SitePagesFormWebparts\Elements.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="SPI\Modules\SitePagesFormWebparts\FormPlaceholder.aspx" />
     <Content Include="SPI\Modules\ProjectWebTemplate\Elements.xml" />
     <Content Include="SPI\Modules\ProjectWebTemplate\Onet.xml" />

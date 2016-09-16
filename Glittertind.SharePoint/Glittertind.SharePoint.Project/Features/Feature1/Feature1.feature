@@ -1,0 +1,3 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<feature deploymentPath="$SharePoint.Project.FileNameWithoutExtension$_$SharePoint.Feature.FileNameWithoutExtension$" title="Glittertind.SharePoint.Project Feature1" dslVersion="1.0.0.0" Id="837e3b42-f865-433f-9e2d-40f852734744" featureId="837e3b42-f865-433f-9e2d-40f852734744" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/FeatureModel">
+</feature>
