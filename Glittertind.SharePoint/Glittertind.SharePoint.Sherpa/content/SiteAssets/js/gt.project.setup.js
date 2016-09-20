@@ -72,7 +72,10 @@ GT.Project.Setup.CreateSiteSettingsCustomActions = function () {
             newCustomAction.set_name('GT.SiteSettings.CopyTasks');
             newCustomAction.set_title('Hent oppgaver fra porteføljeområdet');
             newCustomAction.set_description('Velg oppgaver fra porteføljeområdet og kopier oppgavene til prosjektet.');
-            var customActionJavaScript = 'javascript:window.location.href = String.format("{0}/SitePages/KopierElementer.aspx?srclist={1}&dstlist={2}&dstweb={3}&Origin=SiteSettings", _spPageContextInfo.siteServerRelativeUrl, "Standardoppgaver", "Oppgaver", encodeURIComponent(_spPageContextInfo.webServerRelativeUrl));';
+            
+            var siteColRelativeUrl = _spPageContextInfo.siteServerRelativeUrl === '/' ? '' : _spPageContextInfo.siteServerRelativeUrl;
+            var customActionJavaScript = String.format('{0}/SitePages/KopierElementer.aspx?srclist={1}&dstlist={2}&dstweb={3}&Origin=SiteSettings', siteColRelativeUrl, 'Standardoppgaver', 'Oppgaver', encodeURIComponent(_spPageContextInfo.webServerRelativeUrl));;
+
             newCustomAction.set_url(customActionJavaScript);
             newCustomAction.update();
 
@@ -81,7 +84,8 @@ GT.Project.Setup.CreateSiteSettingsCustomActions = function () {
                 console.log('Configured custom actions for site');
                 deferred.resolve();
             }), Function.createDelegate(this, function() {
-                console.log('Error ' + errorThrown);
+                console.log('Error adding custom actions');
+                console.log(arguments);
                 deferred.resolve();
             }));
         } else {
@@ -101,14 +105,10 @@ GT.Project.Setup.ApplyTheme = function (properties) {
     var clientContext = SP.ClientContext.get_current();
     var web = clientContext.get_web();
 
-    var colorPaletteUrl = _spPageContextInfo.siteServerRelativeUrl + "/_catalogs/theme/15/" + properties.colorPaletteName;
-    var fontSchemeUrl = _spPageContextInfo.siteServerRelativeUrl + "/_catalogs/theme/15/" + properties.fontSchemeName;
+    var siteColRelativeUrl = _spPageContextInfo.siteServerRelativeUrl === '/' ? '' : _spPageContextInfo.siteServerRelativeUrl;
+    var colorPaletteUrl = siteColRelativeUrl + "/_catalogs/theme/15/" + properties.colorPaletteName;
+    var fontSchemeUrl = siteColRelativeUrl + "/_catalogs/theme/15/" + properties.fontSchemeName;
 
-    // I am tired
-    if (_spPageContextInfo.siteServerRelativeUrl === "/") {
-        colorPaletteUrl = "/_catalogs/theme/15/" + properties.colorPaletteName;
-        fontSchemeUrl = "/_catalogs/theme/15/" + properties.fontSchemeName;
-    }
     web.applyTheme(colorPaletteUrl, fontSchemeUrl, properties.backgroundImageUrl, properties.shareGenerated);
     web.update();
 
@@ -148,8 +148,8 @@ GT.Project.Setup.ConfigureQuickLaunch = function () {
                     clientContext.executeQueryAsync(function () {
                         for (var i = 0; i < data.length; i++) {
                             var linkNode = data[i];
-                            var nodeTitle = linkNode.Title;
-                            var linkUrl = GT.Common.GetUrlWithoutTokens(linkNode.Url);
+                            var nodeTitle = GT.Common.GetStringValueWithoutTokens(linkNode.Title);
+                            var linkUrl = GT.Common.GetStringValueWithoutTokens(linkNode.Url);
 							var isExternal = linkNode.IsExternal == true;
                             var existingNode = null;
 
@@ -404,55 +404,20 @@ GT.Project.Setup.copyFile = function (file, srcWeb, srcLibUrl, dstWeb, dstLib) {
     executor.executeAsync(info);
     return deferred.promise();
 };
-GT.Project.Setup.createFolders = function () {
-    var deferred = GT.jQuery.Deferred();
-    GT.jQuery.ajax({
-        url: _spPageContextInfo.siteServerRelativeUrl + "/SiteAssets/gt/config/defaultfolders/folders.txt"
-    })
-	.done(function (data) {
-	    var folders = data.split("\n");
-	    if (folders.length === 0) {
-	        deferred.resolve();
-	        return;
-	    }
-	    var ctx = SP.ClientContext.get_current();
-	    var web = ctx.get_web();
-	    var list = web.get_lists().getByTitle("Dokumenter");
-	    var listUrl = _spPageContextInfo.webAbsoluteUrl + '/Dokumenter';
-	    var root = list.get_rootFolder();
 
-	    for (var i = 0; i < folders.length ; i++) {
-	        root.get_folders().add(listUrl + folders[i]);
-	    }
-
-	    list.update();
-
-	    ctx.executeQueryAsync(function (sender, args) {
-	        console.log("Created folder structure");
-	        deferred.resolve();
-	    }, function (sender, args) {
-	        console.error('Request failed. ' + args.get_message());
-	    });
-	})
-	.fail(function (jqXHR, textStatus, errorThrown) {
-	    console.log("not able to create folder structure, " + textStatus);
-	    deferred.resolve();
-	});
-    return deferred.promise();
-};
 GT.Project.Setup.CopyFilesAndFolders = function (properties) {
     var dstWeb = _spPageContextInfo.webServerRelativeUrl;
     var srcWeb = properties.SrcWeb;
     var srcLib = properties.SrcList;
     var dstLib = properties.DstList;
-    var srcListUrl = srcWeb + "/" + srcLib;
+    var srcListUrl = (srcWeb === '/' ? '' : srcWeb) + '/' + srcLib;
     var dstListUrl = dstWeb + '/' + dstLib;
 
     var deferred = GT.jQuery.Deferred();
     var digest = GT.jQuery("#__REQUESTDIGEST").val();
 
     GT.jQuery.ajax({
-        url: String.format("{0}/_api/web/Lists/GetByTitle('{1}')/Items?$expand=Folder&$select=Title,LinkFilename,FileRef,FileDirRef,Folder/ServerRelativeUrl&$top=500", srcWeb, srcLib),
+        url: String.format("{0}/_api/web/Lists/GetByTitle('{1}')/Items?$expand=Folder&$select=Title,LinkFilename,FileRef,FileDirRef,Folder/ServerRelativeUrl&$top=500", srcWeb === '/' ? '' : srcWeb, srcLib),
         headers: {
             "Accept": "application/json; odata=verbose",
             "X-RequestDigest": digest
@@ -482,7 +447,6 @@ GT.Project.Setup.CopyFilesAndFolders = function (properties) {
 	    }
 
 	    list.update();
-
 	    ctx.executeQueryAsync(function (sender, args) {
 	        console.log("Created folder structure");
 
@@ -508,7 +472,6 @@ GT.Project.Setup.CopyFilesAndFolders = function (properties) {
 };
 
 GT.Project.Setup.populateTaskList = function (listData) {
-
     var deferred = GT.jQuery.Deferred();
 
     var clientContext = SP.ClientContext.get_current();
@@ -522,7 +485,7 @@ GT.Project.Setup.populateTaskList = function (listData) {
 
             for (var i = 0; i < row.Fields.length; i++) {
                 var name = row.Fields[i].Name;
-				var value = GT.Common.GetUrlWithoutTokens(row.Fields[i].Value);
+				var value = GT.Common.GetStringValueWithoutTokens(row.Fields[i].Value);
 				if (name === "Title" && value.length > 255) value = value.substr(0, 252) + "...";
                 listItem.set_item(name, value);
             }
@@ -556,7 +519,6 @@ GT.Project.Setup.populateTaskList = function (listData) {
     }
 
     createListItem(listData.Data);
-
     clientContext.executeQueryAsync(function (sender, args) {
 
         console.log("Copied default items to " + listData.Name);
@@ -663,7 +625,7 @@ GT.Project.Setup.CopyListItems = function (properties) {
     var digest = GT.jQuery("#__REQUESTDIGEST").val();
 
     GT.jQuery.ajax({
-        url: String.format("{0}/_api/web/Lists/GetByTitle('{1}')/Items?$top=500&$select={2}", sourceWebUrl, sourceListName, fieldsJson),
+        url: String.format("{0}/_api/web/Lists/GetByTitle('{1}')/Items?$top=500&$select={2}", sourceWebUrl === '/' ? '' : sourceWebUrl, sourceListName, fieldsJson),
         headers: {
             "Accept": "application/json; odata=verbose",
             "X-RequestDigest": digest
@@ -695,7 +657,7 @@ GT.Project.Setup.CopyListItems = function (properties) {
 
 	                        if (fieldValue && fieldName.toUpperCase() !== "ID" && fieldName.toUpperCase() !== "PARENTIDID") {
 	                            if (fieldName.indexOf("Title") === 0) {
-	                                var value = GT.Common.GetUrlWithoutTokens(fieldValue);
+	                                var value = GT.Common.GetStringValueWithoutTokens(fieldValue);
 	                                if (fieldName === "Title" && value.length > 255) value = value.substr(0, 252) + "...";
 	                                newItem.set_item(fieldName, value);
 	                            } else if (fieldValue.TermGuid) {
@@ -852,7 +814,7 @@ GT.Project.Setup.GetCopyDataFromSourceListsSteps = function (settings, startInde
     var steps = [];
     for (var i = 0; i < settings.DataSources.Lists.length; i++) {
         var listDataSource = settings.DataSources.Lists[i];
-        var srcWebUrl = GT.Common.GetUrlWithoutTokens(listDataSource.SrcWeb);
+        var srcWebUrl = GT.Common.GetStringValueWithoutTokens(listDataSource.SrcWeb);
         var listType = listDataSource.ListType;
 
         if (listType === "DocumentLibrary") {
@@ -1023,7 +985,8 @@ GT.Project.Setup.GetViewFromCollectionByName = function (viewCollection, name) {
 
 GT.Project.Setup.GetDataSources = function () {
     var deferred = GT.jQuery.Deferred();
-    var urlToSettings = _spPageContextInfo.siteServerRelativeUrl + "/SiteAssets/gt/config/core/datasources.txt";
+    var siteColRelativeUrl = _spPageContextInfo.siteServerRelativeUrl === '/' ? '' : _spPageContextInfo.siteServerRelativeUrl;
+    var urlToSettings =  siteColRelativeUrl + "/SiteAssets/gt/config/core/datasources.txt";
 
     GT.jQuery.getJSON(urlToSettings)
     .then(function (data) {

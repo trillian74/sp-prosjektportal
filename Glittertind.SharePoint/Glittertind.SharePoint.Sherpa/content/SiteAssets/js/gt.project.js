@@ -87,20 +87,25 @@ GT.Project.ExecuteFunctionsAfterSPLoaded = function (funcsToExecute) {
     // For IE 10,11+
     if (SP && SP.SOD) {
         SP.SOD.executeFunc('sp.js', 'SP.ClientContext', function () {
-            for (var i = funcsToExecute.length - 1; i >= 0; i--) {
-                funcsToExecute[i]();
-                funcsToExecute.pop();
-            }
+            SP.SOD.registerSod('sp.taxonomy.js', SP.Utilities.Utility.getLayoutsPageUrl('sp.taxonomy.js'));
+            SP.SOD.executeFunc('sp.taxonomy.js', 'SP.Taxonomy.TaxonomySession', function () {
+                for (var i = funcsToExecute.length - 1; i >= 0; i--) {
+                    funcsToExecute[i]();
+                    funcsToExecute.pop();
+                }
+            });
         });
     };
 
     // For Chrome - SP.SOD.executeFunc only has a 53% success rate with Chrome
     if (window['ExecuteOrDelayUntilScriptLoaded']) {
         ExecuteOrDelayUntilScriptLoaded(function () {
-            for (var i = funcsToExecute.length - 1; i >= 0; i--) {
-                funcsToExecute[i]();
-                funcsToExecute.pop();
-            }
+            ExecuteOrDelayUntilScriptLoaded(function () {
+                for (var i = funcsToExecute.length - 1; i >= 0; i--) {
+                    funcsToExecute[i]();
+                    funcsToExecute.pop();
+                }
+            }, "sp.taxonomy.js");
         }, "sp.js");
     };
 }
@@ -279,28 +284,32 @@ GT.Project.EnsureMetaDataDefaultsEventReceiver = function (lib) {
 
 
 GT.Project.PopulateProjectPhasePart = function () {
-    GT.jQuery.getScript(_spPageContextInfo.siteAbsoluteUrl + "/_layouts/15/SP.Taxonomy.js", function () {
-        var defs = [
-          GT.Project.GetPhaseNameFromCurrentItem(),
-          GT.Project.GetProjectPhases(),
-          GT.Project.GetChecklistData()
-        ]
-        GT.jQuery.when.apply(GT.jQuery, defs).then(function (currentPhase, allPhases, checklistData) {
-            if (allPhases && allPhases.length > 0) {
-                var widthPerPhase = 100 / allPhases.length;
-                for (var ix = 0; ix < allPhases.length; ix++) {
-                    var checkListItemStats = checklistData[allPhases[ix].Name];
-                    var phaseLogoMarkup = GT.Project.GetPhaseLogoMarkup(allPhases[ix], allPhases[ix].Name == currentPhase, true, true, widthPerPhase, ix, (ix + 1) == allPhases.length, checkListItemStats);
-                    GT.jQuery('.projectPhases').append(phaseLogoMarkup);
+    GT.jQuery.when(
+        GT.Project.GetPhaseNameFromCurrentItem(),
+        GT.Project.GetProjectPhases(),
+        GT.Project.GetChecklistData()
+    ).then(function (currentPhase, allPhases, checklistData) {
+        if (allPhases) {
+            var oldInternetExplorer = detectIE() && detectIE() < 11;
+            var frontPagePhases = allPhases.filter(function(f) {return f.ShowOnFrontpage; });
+            if (frontPagePhases && frontPagePhases.length > 0) {
+                var phasesWithSubText = frontPagePhases.filter(function(f) {return f.SubText; });
+                var widthPerPhase = 100 / frontPagePhases.length;
+                for (var ix = 0; ix < frontPagePhases.length; ix++) {
+                    if (frontPagePhases[ix].ShowOnFrontpage) {
+                        var checkListItemStats = checklistData[frontPagePhases[ix].Name];
+                        var phaseLogoMarkup = GT.Project.GetPhaseLogoMarkup(frontPagePhases[ix], frontPagePhases[ix].Name == currentPhase, true, true, widthPerPhase, ix, (ix + 1) == frontPagePhases.length, checkListItemStats, oldInternetExplorer);
+                        GT.jQuery('.projectPhases').append(phaseLogoMarkup).addClass(oldInternetExplorer ? 'legacy-ie' : 'not-legacy-ie').addClass(phasesWithSubText.length > 0 ? 'has-subtext' : 'no-subtext');
+                    }
                 }
             }
-        });
+        }
     });
 };
 
 GT.Project.GetPhaseTermSetId = function () {
     var defer = GT.jQuery.Deferred();
-    var settingsUrl = String.format("{0}/SiteAssets/gt/config/core/settings.txt", _spPageContextInfo.siteServerRelativeUrl);
+    var settingsUrl = String.format("{0}/SiteAssets/gt/config/core/settings.txt", _spPageContextInfo.siteServerRelativeUrl === '/' ? '': _spPageContextInfo.siteServerRelativeUrl);
     GT.jQuery.getJSON(settingsUrl)
     .then(function (data) {
         defer.resolve(data.PhaseSettings.TermSetId);
@@ -310,7 +319,7 @@ GT.Project.GetPhaseTermSetId = function () {
         defer.resolve("abcfc9d9-a263-4abb-8234-be973c46258a");
     });
     return defer.promise();
-}
+};
 
 GT.Project.GetProjectPhases = function () {
     var defer = GT.jQuery.Deferred();
@@ -318,54 +327,44 @@ GT.Project.GetProjectPhases = function () {
     GT.jQuery.when(GT.Project.GetPhaseTermSetId()).then(function (termSetId) {
         var context = SP.ClientContext.get_current();
         var taxSession = SP.Taxonomy.TaxonomySession.getTaxonomySession(context);
-        var termStores = taxSession.get_termStores();
+        var termStore = taxSession.getDefaultSiteCollectionTermStore();
+        var termSet = termStore.getTermSet(termSetId);
+        var terms = termSet.getAllTerms();
 
-        context.load(termStores);
-
+        context.load(terms);
         context.executeQueryAsync(Function.createDelegate(this, function () {
-            var termStore = termStores.getItemAtIndex(0);
-            var termSet = termStore.getTermSet(termSetId);
-            var terms = termSet.getAllTerms();
-            context.load(terms);
-            context.executeQueryAsync(Function.createDelegate(this, function () {
-                var termsArray = [];
-                var termEnumerator = terms.getEnumerator();
-
-                while (termEnumerator.moveNext()) {
-                    var currentTerm = termEnumerator.get_current();
-                    if (currentTerm.get_localCustomProperties()["ShowOnFrontpage"] != "false") {
-                        termsArray.push({
-                            "Name": currentTerm.get_name(),
-                            "Id": currentTerm.get_id(),
-                            "SubText": currentTerm.get_localCustomProperties()["SubText"]
-                        });
-                    }
-                }
-
-                defer.resolve(termsArray);
-            }), Function.createDelegate(this, function () {
-                defer.reject(arguments);
-            }));
+            var termsArray = terms.get_data().map(function (t) {
+                return {
+                    Id: t.get_id(),
+                    Name: t.get_name(),
+                    ShowOnFrontpage: t.get_localCustomProperties()["ShowOnFrontpage"] ? t.get_localCustomProperties()["ShowOnFrontpage"] === 'true' : true,
+                    SubText: t.get_localCustomProperties()["SubText"] ? t.get_localCustomProperties()["SubText"] : ""
+                };
+            });
+            defer.resolve(termsArray);
         }), Function.createDelegate(this, function () {
+            console.log('Error: Could not load terms');
             defer.reject(arguments);
         }));
     });
     return defer.promise();
 };
 
-GT.Project.GetPhaseLogoMarkup = function (phase, selected, wrapInListItemMarkup, linkToDocumentLibrary, widthPerPhase, index, isLastPhase, checklistStats) {
+GT.Project.GetPhaseLogoMarkup = function (phase, selected, wrapInListItemMarkup, linkToDocumentLibrary, widthPerPhase, index, isLastPhase, checklistStats, oldInternetExplorer) {
     var phaseDisplayName = "Ingen fase";
     var phaseLetter = 'X';
     var phaseSubText = '';
-    var phaseClass = [];
+    var phaseClasses = [];
+    
+    if (index != undefined) {
+        phaseClasses.push(String.format('phasenumber-{0}', (index+1)));
+    }
     if (selected) {
-        phaseClass.push("selected");
+        phaseClasses.push("selected");
     }
     if (isLastPhase) {
-        phaseClass.push("last-phase");
+        phaseClasses.push("last-phase");
     }
-    phaseClass.push(String.format('phasenumber-{0}', (index+1)));
-
     if (phase && phase.Name) {
         phaseDisplayName = phase.Name;
         phaseLetter = phaseDisplayName.substr(0, 1);
@@ -377,19 +376,19 @@ GT.Project.GetPhaseLogoMarkup = function (phase, selected, wrapInListItemMarkup,
 
     if (checklistStats) {
         checklistMarkup = String.format("<h3>Beslutningspunkter for {0}</h3><ul>" +
-            "<li><span class='gt-icon gt-completed'></span>{1} utførte punkter</li>" +
-            "<li><span class='gt-icon gt-nostatus'></span>{2} åpne punkter</li>" +
+            "<li><span class='gt-icon gt-nostatus'></span>{1} åpne punkter</li>" +
+            "<li><span class='gt-icon gt-completed'></span>{2} utførte punkter</li>" +
             "<li><span class='gt-icon gt-ignored'></span>{3} ikke relevante</li>" +
             "<li class='spacer'><span> </span></li>" +
             "<li><a class='see-all' href='{4}/Lists/Fasesjekkliste/AllItems.aspx?FilterField1=GtProjectPhase&FilterValue1={0}'>Se alle sjekkpunktene for denne fasen</a></li></ul>",
-            phaseDisplayName, checklistStats.Closed, checklistStats.Open, checklistStats.Ignored, _spPageContextInfo.webServerRelativeUrl);
+            phaseDisplayName, checklistStats.Open, checklistStats.Closed, checklistStats.Ignored, _spPageContextInfo.webServerRelativeUrl);
     }
 
     var markup = String.format('<div class="gt-phaseIcon {0}">' +
         '<span class="phaseLetter">{1}</span>' +
         '<span class="projectPhase">{2}</span>' +
         '<span class="phaseSubText">{3}</span>' +
-        '</div>', phaseClass.join(' '), phaseLetter, phaseDisplayName, phaseSubText);
+        '</div>', phaseClasses.join(' '), phaseLetter, phaseDisplayName, phaseSubText);
 
     if (linkToDocumentLibrary)
         markup = String.format('<a href="{0}/Dokumenter/Forms/AllItems.aspx?FilterField1=GtProjectPhase&FilterValue1={1}">{2}</a><div class="checklistStats">{3}</div>', _spPageContextInfo.webServerRelativeUrl,phaseDisplayName, markup, checklistMarkup);
@@ -397,10 +396,10 @@ GT.Project.GetPhaseLogoMarkup = function (phase, selected, wrapInListItemMarkup,
     {
         var styleForIE = '';
         //No support for flex in IE < 10
-        if (detectIE() && detectIE() < 10) {
-            styleForIE = String.format('style="display:table-cell; width:{0}%;"', widthPerPhase);
+        if (oldInternetExplorer) {
+            styleForIE = String.format('style="width:{0}%;"', widthPerPhase);
         }
-        markup = String.format('<li class="{0}" {1}>{2}</li>', phaseClass.join(' '), styleForIE, markup);
+        markup = String.format('<li class="{0}" {1}>{2}</li>', phaseClasses.join(' '), styleForIE, markup);
     }
 
     return markup;
