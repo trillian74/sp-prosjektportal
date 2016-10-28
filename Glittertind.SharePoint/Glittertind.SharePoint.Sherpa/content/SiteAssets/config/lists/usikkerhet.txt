@@ -1,5 +1,5 @@
 ﻿{
-    "Name": "Usikkerhet",
+    "Name": "Risiko",
     "OnQuickLaunch": false,
     "VersioningEnabled":  true,
     "Description": "",

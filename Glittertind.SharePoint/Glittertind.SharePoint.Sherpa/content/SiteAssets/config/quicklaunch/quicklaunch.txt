@@ -20,8 +20,8 @@
         "Title": "Kommunikasjonsplan"
     },
     {
-        "Url": "Lists/Usikkerhet",
-        "Title": "Usikkerhet"
+        "Url": "Lists/Risiko",
+        "Title": "Risiko"
     },
     {
         "Url": "Lists/Oppgaver",

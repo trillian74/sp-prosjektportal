@@ -10,8 +10,9 @@
   <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c0110" />
   <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c0111" />
   <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x010100293fde3fcada480b9a77bbdad7dfa28c0112" />
-  <ContentTypeBinding ListUrl="Lists/Usikkerhet" ContentTypeId="0x010088578e7470cc4aa68d566346483107020101" />
-  <ContentTypeBinding ListUrl="Lists/Usikkerhet" ContentTypeId="0x010088578e7470cc4aa68d566346483107020102" />
+  <ContentTypeBinding ListUrl="Dokumenter" ContentTypeId="0x0120D520003AAFD4C37684427CA2C92723FFE04892" />
+  <ContentTypeBinding ListUrl="Lists/Risiko" ContentTypeId="0x010088578e7470cc4aa68d566346483107020101" />
+  <ContentTypeBinding ListUrl="Lists/Risiko" ContentTypeId="0x010088578e7470cc4aa68d566346483107020102" />
   <ContentTypeBinding ListUrl="Lists/Interessentregister" ContentTypeId="0x010088578e7470cc4aa68d5663464831070202" />
   <ContentTypeBinding ListUrl="Lists/Fasesjekkliste" ContentTypeId="0x010088578e7470cc4aa68d5663464831070204" />
   <ContentTypeBinding ListUrl="Lists/Informasjon" ContentTypeId="0x010088578e7470cc4aa68d5663464831070207" />

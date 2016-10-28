@@ -55,12 +55,12 @@
           </WebPart>
         ]]>
       </AllUsersWebPart>
-      <View List="Lists/Usikkerhet" BaseViewID="1" WebPartZoneID="RightColumn" WebPartOrder="1">
+      <View List="Lists/Risiko" BaseViewID="1" WebPartZoneID="RightColumn" WebPartOrder="1">
         <![CDATA[
          <WebPart xmlns="http://schemas.microsoft.com/WebPart/v2">
           <Assembly>Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c</Assembly>
           <TypeName>Microsoft.SharePoint.WebPartPages.XsltListViewWebPart</TypeName>
-          <Title>Usikkerhet (gjeldende fase)</Title>
+          <Title>Risiko (gjeldende fase)</Title>
          </WebPart>
          ]]>
       </View>
@@ -104,7 +104,7 @@
           </WebPart>
         ]]>
       </AllUsersWebPart>
-      <View List="Lists/Usikkerhet" BaseViewID="1" WebPartZoneID="RightColumn" WebPartOrder="1" />
+      <View List="Lists/Risiko" BaseViewID="1" WebPartZoneID="RightColumn" WebPartOrder="1" />
     </File>
     <File Path="SitePages\Motereferat.aspx" Url="Motereferat.aspx" Type="GhostableInLibrary">
       <Property Name="Title" Value="Møtereferat" />
@@ -152,7 +152,7 @@
           </webParts>
          ]]>
       </View>
-      <View List="Lists/Usikkerhet" BaseViewID="1" WebPartZoneID="LeftColumn" WebPartOrder="1">
+      <View List="Lists/Risiko" BaseViewID="1" WebPartZoneID="LeftColumn" WebPartOrder="1">
         <![CDATA[
          <WebPart xmlns="http://schemas.microsoft.com/WebPart/v2">
           <Assembly>Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c</Assembly>

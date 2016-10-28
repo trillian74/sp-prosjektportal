@@ -45,7 +45,6 @@ GT.Project.ShowMetadataIfIsWelcomePage = function () {
         } else {
             GT.jQuery(selector).html('<p>Informasjon om prosjektet er kun tilgjengelig fra <a href="../' + welcomePage + '">forsiden</a></p>').show();
         }
-
     }, function () {
         console.log('An error has accured. Showing metadata to avoid hiding it in fault.');
         GT.jQuery(selector).show();
@@ -121,7 +120,7 @@ GT.Project.ChangeProjectPhase = function () {
             GT.jQuery.when(
                 GT.Project.ChangeQueryOfListViewOnPage(safeTerm.get_label(), "Dokumenter", "SitePages/Forside.aspx"),
                 GT.Project.ChangeQueryOfListViewOnPage(safeTerm.get_label(), "Oppgaver", "SitePages/Forside.aspx"),
-                GT.Project.ChangeQueryOfListViewOnPage(safeTerm.get_label(), "Usikkerhet", "SitePages/Forside.aspx"),
+                GT.Project.ChangeQueryOfListViewOnPage(safeTerm.get_label(), "Risiko", "SitePages/Forside.aspx"),
                 GT.Project.SetMetaDataDefaultsForLib("Dokumenter", "GtProjectPhase", safeTerm)
             ).then(function () {
                 deferred.resolve();
@@ -226,7 +225,6 @@ GT.Project.SetMetaDataDefaultsForLib = function (lib, field, term) {
        });
     GT.Project.EnsureMetaDataDefaultsEventReceiver(lib);
     return deferred.promise();
-
 };
 
 GT.Project.GetSafeTerm = function (term) {
@@ -246,7 +244,6 @@ GT.Project.GetSafeTerm = function (term) {
 };
 
 GT.Project.EnsureMetaDataDefaultsEventReceiver = function (lib) {
-
     var ctx = new SP.ClientContext.get_current();
     var web = ctx.get_web();
     var eventReceivers = web.get_lists().getByTitle(lib).get_eventReceivers();
@@ -274,14 +271,12 @@ GT.Project.EnsureMetaDataDefaultsEventReceiver = function (lib) {
 
             eventReceivers.add(eventRecCreationInfo);
             console.log('Added LocationBasedMetadataDefaultsReceiver event receiver');
-
         }
     },
     function (sender, args) {
         console.log("Failed while getting event receivers: " + args.get_message());
     });
 };
-
 
 GT.Project.PopulateProjectPhasePart = function () {
     GT.jQuery.when(
@@ -291,9 +286,9 @@ GT.Project.PopulateProjectPhasePart = function () {
     ).then(function (currentPhase, allPhases, checklistData) {
         if (allPhases) {
             var oldInternetExplorer = detectIE() && detectIE() < 11;
-            var frontPagePhases = allPhases.filter(function(f) {return f.ShowOnFrontpage; });
+            var frontPagePhases = allPhases.filter(function (f) { return f.ShowOnFrontpage; });
             if (frontPagePhases && frontPagePhases.length > 0) {
-                var phasesWithSubText = frontPagePhases.filter(function(f) {return f.SubText; });
+                var phasesWithSubText = frontPagePhases.filter(function (f) { return f.SubText; });
                 var widthPerPhase = 100 / frontPagePhases.length;
                 for (var ix = 0; ix < frontPagePhases.length; ix++) {
                     if (frontPagePhases[ix].ShowOnFrontpage) {
@@ -309,12 +304,12 @@ GT.Project.PopulateProjectPhasePart = function () {
 
 GT.Project.GetPhaseTermSetId = function () {
     var defer = GT.jQuery.Deferred();
-    var settingsUrl = String.format("{0}/SiteAssets/gt/config/core/settings.txt", _spPageContextInfo.siteServerRelativeUrl === '/' ? '': _spPageContextInfo.siteServerRelativeUrl);
+    var settingsUrl = String.format("{0}/SiteAssets/gt/config/core/settings.txt", _spPageContextInfo.siteServerRelativeUrl === '/' ? '' : _spPageContextInfo.siteServerRelativeUrl);
     GT.jQuery.getJSON(settingsUrl)
     .then(function (data) {
         defer.resolve(data.PhaseSettings.TermSetId);
     })
-    .fail(function() {
+    .fail(function () {
         console.log("Could not find settings file for getting taxonomy term set id. Resolving to default.");
         defer.resolve("abcfc9d9-a263-4abb-8234-be973c46258a");
     });
@@ -355,9 +350,9 @@ GT.Project.GetPhaseLogoMarkup = function (phase, selected, wrapInListItemMarkup,
     var phaseLetter = 'X';
     var phaseSubText = '';
     var phaseClasses = [];
-    
+
     if (index != undefined) {
-        phaseClasses.push(String.format('phasenumber-{0}', (index+1)));
+        phaseClasses.push(String.format('phasenumber-{0}', (index + 1)));
     }
     if (selected) {
         phaseClasses.push("selected");
@@ -391,9 +386,8 @@ GT.Project.GetPhaseLogoMarkup = function (phase, selected, wrapInListItemMarkup,
         '</div>', phaseClasses.join(' '), phaseLetter, phaseDisplayName, phaseSubText);
 
     if (linkToDocumentLibrary)
-        markup = String.format('<a href="{0}/Dokumenter/Forms/AllItems.aspx?FilterField1=GtProjectPhase&FilterValue1={1}">{2}</a><div class="checklistStats">{3}</div>', _spPageContextInfo.webServerRelativeUrl,phaseDisplayName, markup, checklistMarkup);
-    if (wrapInListItemMarkup)
-    {
+        markup = String.format('<a href="{0}/Dokumenter/Forms/AllItems.aspx?FilterField1=GtProjectPhase&FilterValue1={1}">{2}</a><div class="checklistStats">{3}</div>', _spPageContextInfo.webServerRelativeUrl, phaseDisplayName, markup, checklistMarkup);
+    if (wrapInListItemMarkup) {
         var styleForIE = '';
         //No support for flex in IE < 10
         if (oldInternetExplorer) {
@@ -604,11 +598,9 @@ GT.Project.PhaseForm.CheckList.getData = function () {
             defer.reject();
         });
         return defer.promise();
-
     });
 
     return promise;
-
 };
 
 GT.Project.PhaseForm.CheckList.CheckListItem = function (title, id, status) {
@@ -700,7 +692,6 @@ GT.Project.CalendarForm.getData = function () {
             defer.reject();
         });
         return defer.promise();
-
     });
 
     return promise;
@@ -736,14 +727,12 @@ GT.Project.Model.webModel = function () {
             return new Date(this.lastChanged()).format("dd. MM yyyy");
         }
         return '';
-
     }, this);
     _this.createdDisplayValue = ko.computed(function () {
         if (this.created() != undefined) {
             return new Date(this.created()).format("dd. MM yyyy");
         }
         return '';
-
     }, this);
 };
 
@@ -785,7 +774,6 @@ GT.Project.get_allProjectsUnderCurrent = function () {
             }
             GT.Project.Model.appViewModel.loaded(true);
             get_webDataDeferred.resolve(GT.Project.Model.appViewModel);
-
         });
 
         return get_webDataDeferred.promise();
